@@ -1,5 +1,6 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Button } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const products = {
   Marlboro: [ 'Red 23s', 'Red', 'Gold 23s', 'Gold', 'Gold 100s', 'Touch', 'Fine Touch', 'Red Touch', 'Line Gold', 'Line Blue'],
@@ -14,6 +15,7 @@ const CounterScreen = ({ route, navigation }) => {
 
   const [counts, setCounts] = useState(() => {
     const initial = {};
+   
     Object.entries(products).forEach(([brand, variants]) => {
       variants.forEach(variant => {
         const key = `${brand}_${variant}`;
@@ -44,10 +46,22 @@ const CounterScreen = ({ route, navigation }) => {
     }));
   };
 
+  const resetCounts = () => {
+  const reset = {};
+  Object.entries(products).forEach(([brand, variants]) => {
+    variants.forEach(variant => {
+      const key = `${brand}_${variant}`;
+      reset[key] = 0;
+    });
+  });
+  setCounts(reset);
+};
+
   const renderCounter = (brand, variant) => {
     const key = `${brand}_${variant}`;
     return (
       <View style={styles.counterContainer} key={key}>
+       
         <Text style={styles.label}>{variant}</Text>
         <View style={styles.controls}>
           <TouchableOpacity onPress={() => handleCount(key, -1)} style={styles.minus}>
@@ -79,7 +93,16 @@ const CounterScreen = ({ route, navigation }) => {
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: '#fafafa' }}>
+        <View style={styles.headerRow}>
+            <Text style={styles.sectionTitle}>Counter</Text>
+            <TouchableOpacity onPress={resetCounts} style={styles.resetButton}>
+                <MaterialIcons name = 'restart-alt' size = '30' ></MaterialIcons>
+            </TouchableOpacity>
+        </View>
+
     <ScrollView contentContainerStyle={styles.container}>
+        
       {Object.entries(products).map(([brand, variants]) => (
         <View key={brand}>
           <Text style={styles.brandTitle}>{brand}</Text>
@@ -97,6 +120,7 @@ const CounterScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </View>
   );
 };
 
@@ -106,11 +130,35 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     backgroundColor: '#fafafa',
   },
+  headerRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: 20,
+},
+
+resetButton: {
+  paddingVertical: 6,
+  paddingHorizontal: 12,
+  borderRadius: 6,
+  marginRight:20,
+},
+
+  sectionTitle:{
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginBottom:0,
+    color: '#333',
+    marginLeft:20,
+
+  },
   brandTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginTop: 24,
+    marginTop: 12,
     marginBottom: 12,
+
   },
   row: {
     flexDirection: 'row',
