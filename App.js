@@ -10,6 +10,7 @@ import StoreScreen from './screens/StoreScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import { StoresProvider } from './context/StoresContext';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import CounterScreen from './screens/CounterScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,6 +59,7 @@ function HomeStack() {
       <Stack.Screen name="Dodaj" component={AddStoreScreen} options={defaultHeaderOptions('Dodaj Trgovinu')} />
       <Stack.Screen name="Uredi" component={EditStoreScreen} options={defaultHeaderOptions('Uredi Trgovinu')} />
       <Stack.Screen name = "Unos" component={StoreScreen} options={defaultHeaderOptions('Unos')} />
+      <Stack.Screen name="Counter" component={CounterScreen} options={{ headerBackTitle: 'Back' }} />
     </Stack.Navigator>
   );
 }

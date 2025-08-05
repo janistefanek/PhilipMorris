@@ -9,9 +9,13 @@ const HomeScreen = ({ navigation }) => {
   const { stores, deleteStore, editStore, } = useContext(StoresContext);
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const handleStorePress = (storeId) => {
+  const handleStorePress = (store) => {
    console.log("store pressed")
-   navigation.navigate('Unos', { screen: 'UnosScreen', params: { storeId } });
+   navigation.navigate('Counter', {
+      store,
+      kasaIndex: 0,
+      totalKasa: parseInt(store.cashRegisterCount),
+      });
   };
 
   const handleDotsPress = (storeId) => {
@@ -67,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
               key={store.id}
               style={styles.storeCard}
-              onPress={() => handleStorePress(store.id)}
+              onPress={() => handleStorePress(store)}
             >
               <Text style={styles.storeName}>{store.name}</Text>
 
