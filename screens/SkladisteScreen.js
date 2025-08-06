@@ -195,8 +195,9 @@ const styles = StyleSheet.create({
   },
   adjustText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 13,
     color: '#000',
+    textAlign: 'center',
   },
   adjustCount: {
     marginHorizontal: 10,

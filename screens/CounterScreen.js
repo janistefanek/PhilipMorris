@@ -170,14 +170,14 @@ const CounterScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    paddingBottom: 100,
+    paddingBottom: 20,
     backgroundColor: '#fafafa',
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
   },
   finishButton: {
     backgroundColor: '#28a745',
@@ -209,15 +209,15 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginLeft: 15,
-    marginRight: 15,
+    justifyContent: 'center',
     gap: 16,
+    paddingHorizontal: 10,
   },
   counterContainer: {
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 16,
-    width: 150,
+    width: '47%',
     height: 100,
     alignItems: 'center',
     marginBottom: 6,
@@ -233,21 +233,29 @@ const styles = StyleSheet.create({
   controls: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   minus: {
     backgroundColor: '#fdd',
-    padding: 8,
+    width: 36,
+    height: 36,
     borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   plus: {
     backgroundColor: '#dfd',
-    padding: 8,
+    width: 36,
+    height: 36,
     borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   count: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginHorizontal: 12,
+    marginHorizontal: 16,
   },
   controlText: {
     fontSize: 16,
