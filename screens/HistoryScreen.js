@@ -55,7 +55,6 @@ const HistoryScreen = () => {
       openedSwipeableRef.current = null;
     }
 
-    // Budući da prikazujemo reverznu listu, mapiramo index na originalni
     const originalIndex = povijest.length - 1 - indexToDelete;
     const novaPovijest = povijest.filter((_, index) => index !== originalIndex);
 
@@ -132,16 +131,20 @@ const HistoryScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9f9f9', padding: 16 },
+  container: { flex: 1, backgroundColor: '#fafafa', padding: 16 },
   card: {
     backgroundColor: '#fff',
     borderRadius: 12,
+    alignSelf:'center',
     padding: 16,
+    width:'95%',
+    marginBottom:12,
+    marginLeft:3,
+    marginRight:3,
+    elevation: 2,
+    shadowOffset: { width: 3, height: 3 },
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
   },
   title: { fontWeight: 'bold', fontSize: 16, marginBottom: 8 },
   row: {
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   viewMoreButton: {
-    backgroundColor: '#4F8EF7',
+    backgroundColor: '#699bf8',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -158,8 +161,7 @@ const styles = StyleSheet.create({
   },
   viewMoreText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 12,
   },
   deleteBox: {
     backgroundColor: '#ff4d4d',

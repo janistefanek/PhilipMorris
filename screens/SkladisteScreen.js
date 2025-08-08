@@ -5,11 +5,10 @@ const SkladisteScreen = ({ route, navigation }) => {
   const { totalCounts, store } = route.params || {};
 
   const [adjustedCounts, setAdjustedCounts] = useState({});
-  const [missingNotTaken, setMissingNotTaken] = useState([]); // <- nova varijabla
+  const [missingNotTaken, setMissingNotTaken] = useState([]);
 
   useEffect(() => {
     if (totalCounts) {
-      // Inicijalno postavi samo stavke koje su > 0
       const filteredCounts = Object.fromEntries(
         Object.entries(totalCounts).filter(([_, val]) => val > 0)
       );
@@ -56,7 +55,6 @@ const SkladisteScreen = ({ route, navigation }) => {
     });
   };
 
-  // Vrati sve stavke iz adjustedCounts bez filtriranja po vrednosti
   const getListData = (data) => {
     return Object.entries(data)
       .map(([key, value]) => ({
