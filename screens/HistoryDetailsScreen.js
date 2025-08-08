@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -30,9 +30,24 @@ const HistoryDetailsScreen = ({ route, navigation }) => {
     </View>
   );
 
+  const renderValueRowBezIkone = (value) => (
+    <View style={styles.valueRow}>
+      <Text style={styles.value}>{value}</Text>
+    </View>
+  );
+
+  const renderValueRowBezTeksta = (value) => (
+    <TouchableOpacity onPress={() => handleCopy(value)} style={{ marginLeft: 10 }}>
+      <Ionicons name="copy-outline" size={24} color="#699bf8" />
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{item.store.name}</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>{item.store.name}</Text>
+        {renderValueRowBezTeksta(item.store.name)}
+      </View>
 
       <Text style={styles.label}>Orbico kod trgovine:</Text>
       {renderValueRow(item.store.orbicoCode)}
@@ -44,21 +59,21 @@ const HistoryDetailsScreen = ({ route, navigation }) => {
       {renderValueRow(item.ukupnoNapunjenih)}
 
       <Text style={styles.label}>OOS na blagajnama:</Text>
-      {renderValueRow(
+      {renderValueRowBezIkone(
         item.oosNaBlagajnama.length > 0
           ? item.oosNaBlagajnama.map((o) => o.replace(/_/g, ' ')).join(', ')
           : 'Nema'
       )}
 
       <Text style={styles.label}>Generalni OOS:</Text>
-      {renderValueRow(
+      {renderValueRowBezIkone(
         item.generalniOOS.length > 0
           ? item.generalniOOS.map((o) => o.replace(/_/g, ' ')).join(', ')
           : 'Nema'
       )}
 
       <Text style={styles.label}>Datum:</Text>
-      {renderValueRow(new Date(item.timestamp).toLocaleString())}
+      {renderValueRowBezIkone(new Date(item.timestamp).toLocaleString())}
 
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.buttonText}>Zatvori</Text>
@@ -80,11 +95,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     padding: 20,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center', // vertikalno centriranje
+    justifyContent: 'center', // centriranje po širini, stavi 'flex-start' ako želiš lijevo
+    marginBottom: 20,
+  },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 20,
-    alignSelf: 'center',
   },
   label: {
     fontWeight: '600',
@@ -112,7 +131,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '60%',
     height: '6%',
-    marginTop: 130,
+    marginTop: 70,
+    marginBottom: 100,
     alignSelf: 'center',
     justifyContent: 'center',
   },
