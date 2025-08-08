@@ -12,7 +12,6 @@ const products = {
 
 const CounterScreen = ({ route, navigation }) => {
   const { store, kasaIndex, totalKasa } = route.params;
-
   const allKasaCountsRef = useRef(route.params.allKasaCounts || {});
 
   const [counts, setCounts] = useState(() => {
@@ -71,7 +70,7 @@ const CounterScreen = ({ route, navigation }) => {
   const goToNextKasa = () => {
     saveCurrentKasa();
     if (kasaIndex + 1 < totalKasa) {
-      navigation.push('Counter', {
+      navigation.replace('Counter', {
         store,
         kasaIndex: kasaIndex + 1,
         totalKasa,
@@ -83,7 +82,12 @@ const CounterScreen = ({ route, navigation }) => {
   const goToPrevKasa = () => {
     saveCurrentKasa();
     if (kasaIndex > 0) {
-      navigation.goBack();
+      navigation.replace('Counter', {
+        store,
+        kasaIndex: kasaIndex - 1,
+        totalKasa,
+        allKasaCounts: allKasaCountsRef.current,
+      });
     }
   };
 
@@ -104,7 +108,30 @@ const CounterScreen = ({ route, navigation }) => {
       });
     });
 
-    navigation.navigate('Skladiste', { totalCounts, store });
+    const allKasaKeys = Object.keys(allKasaCountsRef.current);
+    const numberOfKasas = allKasaKeys.length;
+
+    const countOnAllKasas = {};
+
+    allKasaKeys.forEach(kasaId => {
+      const kasaCounts = allKasaCountsRef.current[kasaId];
+      Object.entries(kasaCounts).forEach(([key, val]) => {
+        if (val > 0) {
+          countOnAllKasas[key] = (countOnAllKasas[key] || 0) + 1;
+        }
+      });
+    });
+
+    const missingOnAllKasas = Object.entries(countOnAllKasas)
+      .filter(([_, count]) => count === numberOfKasas)
+      .map(([key]) => key);
+
+    navigation.navigate('Skladiste', {
+      totalCounts,
+      store,
+      allKasaCounts: allKasaCountsRef.current,
+      missingCigarettes: missingOnAllKasas,
+    });
   };
 
   const renderCounter = (brand, variant) => {

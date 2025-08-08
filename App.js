@@ -12,6 +12,7 @@ import { StoresProvider } from './context/StoresContext';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import CounterScreen from './screens/CounterScreen';
 import SkladisteScreen from './screens/SkladisteScreen';
+import SlaganjeScreen from './screens/SlaganjeScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,6 +63,7 @@ function HomeStack() {
       <Stack.Screen name = "Unos" component={StoreScreen} options={defaultHeaderOptions('Unos')} />
       <Stack.Screen name="Counter" component={CounterScreen} options={{ headerBackTitle: 'Back' }} />
       <Stack.Screen name="Skladiste" component={SkladisteScreen} />
+      <Stack.Screen name="Slaganje" component={SlaganjeScreen} options={{ ...defaultHeaderOptions('Slaganje'),headerBackTitle: 'Back'}}/>
     </Stack.Navigator>
   );
 }
