@@ -112,59 +112,73 @@ const SlaganjeScreen = ({ route, navigation }) => {
             </View>
           </View>
 
-          <View style={styles.totalRow}>
-            <Text style={styles.total}>OOS na blagajnama:</Text>
-            <View style={styles.totalBox}>
-              <Text style={styles.totalBoxText}>
-                {oosNaBlagajnama.length > 0
-                  ? oosNaBlagajnama.map(c => c.replace(/_/g, ' ')).join(', ')
-                  : 'Nema'}
-              </Text>
-            </View>
+          {/* Centered heading for OOS na blagajnama */}
+          <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#000' }}>OOS na blagajnama</Text>
+          </View>
+          {/* Box with missing items below heading, left aligned */}
+          <View style={[styles.totalBox, { alignSelf: 'center', minWidth: 210, alignItems: 'flex-start' }]}>
+            {oosNaBlagajnama.length > 0
+              ? oosNaBlagajnama.map((c, index) => (
+                  <View key={index} style={styles.oosItemRow}>
+                    <View style={styles.oosBullet} />
+                    <Text style={styles.oosItem}>{c.replace(/_/g, ' ')}</Text>
+                  </View>
+                ))
+              : <Text style={styles.oosItem}>Nema</Text>}
           </View>
 
-          <View style={styles.totalRow}>
-            <Text style={styles.total}>Generalni OOS:</Text>
-            <View style={styles.totalBox}>
-              <Text style={styles.totalBoxText}>
-                {generalniOOS.length > 0
-                  ? generalniOOS.map(c => c.replace(/_/g, ' ')).join(', ')
-                  : 'Nema'}
-              </Text>
-            </View>
+          {/* Centered heading for Generalni OOS */}
+          <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#000' }}>Generalni OOS</Text>
+          </View>
+          {/* Box with missing items below heading, left aligned */}
+          <View style={[styles.totalBox, { alignSelf: 'center', minWidth: 210, alignItems: 'flex-start' }]}>
+            {generalniOOS.length > 0
+              ? generalniOOS.map((c, index) => (
+                  <View key={index} style={styles.oosItemRow}>
+                    <View style={styles.oosBullet} />
+                    <Text style={styles.oosItem}>{c.replace(/_/g, ' ')}</Text>
+                  </View>
+                ))
+              : <Text style={styles.oosItem}>Nema</Text>}
           </View>
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSpremi}>
-        <Text style={styles.saveButtonText}>Spremi</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSpremi}>
+          <Text style={styles.saveButtonText}>Spremi</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#fafafa',
-    padding: 20,
+    padding: 30,
   },
   card: {
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 20,
+    padding: 40,
     shadowColor: '#000',
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 4,
+    marginBottom: 20,
   },
   kasaSection: {
-    marginBottom: 20,
+    marginBottom: 25,
   },
   kasaTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   row: {
     flexDirection: 'row',
@@ -200,15 +214,18 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   totalBox: {
-    backgroundColor: '#699bf8',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    backgroundColor: '#fafafa',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 6,
     minWidth: 40,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 10,
   },
   totalBoxText: {
-    color: '#fff',
+    color: '#333',
     fontSize: 12,
     fontWeight: 'bold',
     flexShrink: 1,
@@ -225,6 +242,35 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 18,
     textAlign: 'center',
+  },
+  buttonContainer: {
+    backgroundColor: '#fafafa',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+  oosContainer: {
+    flexDirection: 'column',
+    flex: 1,
+  },
+  oosItemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+    marginTop:2,
+    paddingLeft: 20,
+  },
+  oosBullet: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#699bf8',
+    marginRight: 8,
+  },
+  oosItem: {
+    color: '#333',
+    fontSize:12,
+    flexShrink: 1,
   },
 });
 
