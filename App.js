@@ -13,6 +13,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import CounterScreen from './screens/CounterScreen';
 import SkladisteScreen from './screens/SkladisteScreen';
 import SlaganjeScreen from './screens/SlaganjeScreen';
+import HistoryDetailsScreen from './screens/HistoryDetailsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,7 +99,10 @@ function StoreStack() {
 function HistoryStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="HistoryScreen" component={HistoryScreen} options={{
+      <Stack.Screen
+        name="HistoryScreen"
+        component={HistoryScreen}
+        options={{
           title: 'Povijest',
           headerStyle: {
             elevation: 0,
@@ -106,15 +110,23 @@ function HistoryStack() {
             borderBottomWidth: 0,
             height: 120,
             backgroundColor: '#fafafa',
-              },
+          },
           headerTitleAlign: 'left',
           headerTitleStyle: {
             marginLeft: 30,
             fontSize: 32,
             fontWeight: 'bold',
-              },
-
-        }} />
+          },
+        }}
+      />
+      <Stack.Screen
+        name="HistoryDetails"
+        component={HistoryDetailsScreen}
+        options={{
+          ...defaultHeaderOptions('Detalji'),
+          headerBackTitle: 'Back',
+        }}
+      />
     </Stack.Navigator>
   );
 }
