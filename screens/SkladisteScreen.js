@@ -5,10 +5,15 @@ const SkladisteScreen = ({ route, navigation }) => {
   const { totalCounts, store } = route.params || {};
 
   const [adjustedCounts, setAdjustedCounts] = useState({});
+  const [missingNotTaken, setMissingNotTaken] = useState([]); // <- nova varijabla
 
   useEffect(() => {
     if (totalCounts) {
-      setAdjustedCounts({ ...totalCounts });
+      // Inicijalno postavi samo stavke koje su > 0
+      const filteredCounts = Object.fromEntries(
+        Object.entries(totalCounts).filter(([_, val]) => val > 0)
+      );
+      setAdjustedCounts(filteredCounts);
     }
   }, [totalCounts]);
 
@@ -29,10 +34,10 @@ const SkladisteScreen = ({ route, navigation }) => {
         borderBottomWidth: 0,
       },
       headerTitleStyle: {
-      fontSize: 25,
-      fontWeight: 'bold',
-      marginBottom: 10,
-    },
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginBottom: 10,
+      },
     });
   }, [navigation, store]);
 
@@ -43,9 +48,17 @@ const SkladisteScreen = ({ route, navigation }) => {
     });
   };
 
+  const NavigateToSlaganje = () => {
+    navigation.navigate('Slaganje', {
+      adjustedCounts,
+      store,
+      allKasaCounts: route.params?.allKasaCounts || {},
+    });
+  };
+
+  // Vrati sve stavke iz adjustedCounts bez filtriranja po vrednosti
   const getListData = (data) => {
     return Object.entries(data)
-      .filter(([_, value]) => value > 0)
       .map(([key, value]) => ({
         key,
         name: key.replace(/_/g, ' '),
@@ -102,7 +115,18 @@ const SkladisteScreen = ({ route, navigation }) => {
         <Text style={styles.totalLabel}>Ukupno uzeto iz skladišta</Text>
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      {missingNotTaken.length > 0 && (
+        <View style={[styles.card, styles.listContainer]}>
+          <Text style={styles.listHeading}>Fale na svim kasama, ali nisu uzete:</Text>
+          {missingNotTaken.map(key => (
+            <Text key={key} style={styles.variantName}>
+              {key.replace(/_/g, ' ')}
+            </Text>
+          ))}
+        </View>
+      )}
+
+      <TouchableOpacity style={styles.button} onPress={NavigateToSlaganje}>
         <Text style={styles.buttonText}>Slaganje po kasama</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -150,7 +174,7 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   listContainer: {
-   backgroundColor: '#fff',
+    backgroundColor: '#fff',
     width: '100%',
     paddingVertical: 20,
     paddingHorizontal: 25,
@@ -180,7 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
     flex: 1,
-    marginRight: 10,
+    marginBottom: 4,
   },
   adjustContainer: {
     flexDirection: 'row',
