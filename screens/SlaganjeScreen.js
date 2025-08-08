@@ -1,5 +1,6 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SlaganjeScreen = ({ route, navigation }) => {
   const { adjustedCounts, store, allKasaCounts } = route.params;
@@ -44,6 +45,8 @@ const SlaganjeScreen = ({ route, navigation }) => {
 
   const generalniOOS = oosNaBlagajnama.filter((productKey) => adjustedCounts[productKey] === 0);
 
+  const ukupnoNapunjenih = Object.values(raspodjela).flat().reduce((acc, { kolicina }) => acc + kolicina, 0);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Slaganje',
@@ -61,54 +64,82 @@ const SlaganjeScreen = ({ route, navigation }) => {
     });
   }, [navigation]);
 
+  const handleSpremi = async () => {
+    try {
+      const now = new Date();
+      const zapis = {
+        store,
+        ukupnoNapunjenih,
+        oosNaBlagajnama,
+        generalniOOS,
+        timestamp: now.toISOString(),
+      };
+
+      const povijestRaw = await AsyncStorage.getItem('@povijest');
+      const povijest = povijestRaw ? JSON.parse(povijestRaw) : [];
+
+      povijest.push(zapis);
+
+      await AsyncStorage.setItem('@povijest', JSON.stringify(povijest));
+
+      navigation.navigate('Povijest');
+    } catch (e) {
+      console.error('Greška pri spremanju povijesti:', e);
+    }
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.card}>
-        {Object.entries(raspodjela).map(([kasaName, proizvodi]) => (
-          <View key={kasaName} style={styles.kasaSection}>
-            <Text style={styles.kasaTitle}>{kasaName}</Text>
-            {proizvodi.map(({ naziv, kolicina }) => (
-              <View key={naziv} style={styles.row}>
-                <View style={styles.bullet} />
-                <Text style={styles.productName}>{naziv}</Text>
-                <Text style={styles.amount}>{kolicina}</Text>
-              </View>
-            ))}
-          </View>
-        ))}
+    <>
+      <ScrollView style={styles.container}>
+        <View style={styles.card}>
+          {Object.entries(raspodjela).map(([kasaName, proizvodi]) => (
+            <View key={kasaName} style={styles.kasaSection}>
+              <Text style={styles.kasaTitle}>{kasaName}</Text>
+              {proizvodi.map(({ naziv, kolicina }) => (
+                <View key={naziv} style={styles.row}>
+                  <View style={styles.bullet} />
+                  <Text style={styles.productName}>{naziv}</Text>
+                  <Text style={styles.amount}>{kolicina}</Text>
+                </View>
+              ))}
+            </View>
+          ))}
 
-        <View style={styles.totalRow}>
-          <Text style={styles.total}>Ukupno napunjeno:</Text>
-          <View style={styles.totalBox}>
-            <Text style={styles.totalBoxText}>
-              {Object.values(raspodjela).flat().reduce((acc, { kolicina }) => acc + kolicina, 0)}
-            </Text>
+          <View style={styles.totalRow}>
+            <Text style={styles.total}>Ukupno napunjeno:</Text>
+            <View style={styles.totalBox}>
+              <Text style={styles.totalBoxText}>{ukupnoNapunjenih}</Text>
+            </View>
+          </View>
+
+          <View style={styles.totalRow}>
+            <Text style={styles.total}>OOS na blagajnama:</Text>
+            <View style={styles.totalBox}>
+              <Text style={styles.totalBoxText}>
+                {oosNaBlagajnama.length > 0
+                  ? oosNaBlagajnama.map(c => c.replace(/_/g, ' ')).join(', ')
+                  : 'Nema'}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.totalRow}>
+            <Text style={styles.total}>Generalni OOS:</Text>
+            <View style={styles.totalBox}>
+              <Text style={styles.totalBoxText}>
+                {generalniOOS.length > 0
+                  ? generalniOOS.map(c => c.replace(/_/g, ' ')).join(', ')
+                  : 'Nema'}
+              </Text>
+            </View>
           </View>
         </View>
+      </ScrollView>
 
-        <View style={styles.totalRow}>
-          <Text style={styles.total}>OOS na blagajnama:</Text>
-          <View style={styles.totalBox}>
-            <Text style={styles.totalBoxText}>
-              {oosNaBlagajnama.length > 0
-                ? oosNaBlagajnama.map(c => c.replace(/_/g, ' ')).join(', ')
-                : 'Nema'}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.totalRow}>
-          <Text style={styles.total}>Generalni OOS:</Text>
-          <View style={styles.totalBox}>
-            <Text style={styles.totalBoxText}>
-              {generalniOOS.length > 0
-                ? generalniOOS.map(c => c.replace(/_/g, ' ')).join(', ')
-                : 'Nema'}
-            </Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSpremi}>
+        <Text style={styles.saveButtonText}>Spremi</Text>
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -161,23 +192,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
+    justifyContent: 'space-between',
   },
   total: {
     fontSize: 16,
     color: '#666',
-    flex: 1,
+    flexShrink: 1,
   },
   totalBox: {
-    marginLeft: 8,
     backgroundColor: '#699bf8',
-    padding: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     borderRadius: 6,
-    alignSelf: 'flex-start',
+    minWidth: 40,
+    alignItems: 'center',
   },
   totalBoxText: {
     color: '#fff',
     fontSize: 12,
     fontWeight: 'bold',
+    flexShrink: 1,
+  },
+  saveButton: {
+    backgroundColor: '#699bf8',
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 
