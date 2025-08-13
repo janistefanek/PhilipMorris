@@ -24,6 +24,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "25a91777-4d25-4d96-9e35-55024e21dc18"
+      }
+    },
+    "owner": "pmiz",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/25a91777-4d25-4d96-9e35-55024e21dc18"
     }
   }
 }
